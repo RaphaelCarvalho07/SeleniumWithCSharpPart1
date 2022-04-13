@@ -90,5 +90,43 @@ namespace Alura.LeilaoOnline.Selenium.Tests
             // Assert - devo ser direcionado para uma página de agradecimento
             Assert.Contains("section-registro", driver.PageSource);
         }
+
+        [Fact]
+        public void DadoNomeEmBrancoDeveMostrarMensagemDeErro()
+        {
+            // Arrange
+            driver.Navigate().GoToUrl("http://localhost:5000");
+
+            // Botão de registro
+            var botaoRegistro = driver.FindElement(By.Id("btnRegistro"));
+
+            // Act
+            botaoRegistro.Click();
+
+            // Assert
+            IWebElement elemento = driver.FindElement(By.CssSelector("span.msg-erro[data-valmsg-for=Nome]"));
+            Assert.Contains("The Nome field is required", driver.PageSource);
+        }
+
+        [Fact]
+        public void DadoEmailInvalidoDeveMostrarMensagemDeErro()
+        {
+            // Arrange
+            driver.Navigate().GoToUrl("http://localhost:5000");
+
+            // Email
+            var inputEmail = driver.FindElement(By.Id("Email"));
+            inputEmail.SendKeys("raphilske");
+
+            // Botão de registro
+            var botaoRegistro = driver.FindElement(By.Id("btnRegistro"));
+
+            // Act
+            botaoRegistro.Click();
+
+            // Assert
+            IWebElement elemento = driver.FindElement(By.CssSelector("span.msg-erro[data-valmsg-for=Email]"));
+            Assert.Contains("The Nome field is required", driver.PageSource);
+        }
     }
 }
