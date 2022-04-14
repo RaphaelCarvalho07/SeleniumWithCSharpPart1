@@ -1,5 +1,6 @@
 ﻿using System;
 using Alura.LeilaoOnline.Selenium.Fixtures;
+using Alura.LeilaoOnline.Selenium.PageObjects;
 using OpenQA.Selenium;
 using Xunit;
 
@@ -112,21 +113,22 @@ namespace Alura.LeilaoOnline.Selenium.Tests
         public void DadoEmailInvalidoDeveMostrarMensagemDeErro()
         {
             // Arrange
-            driver.Navigate().GoToUrl("http://localhost:5000");
+            var registroPO = new RegistroPO(driver);
+            registroPO.Visitar();
 
-            // Email
-            var inputEmail = driver.FindElement(By.Id("Email"));
-            inputEmail.SendKeys("raphilske");
-
-            // Botão de registro
-            var botaoRegistro = driver.FindElement(By.Id("btnRegistro"));
+            registroPO.PreencheFormulario(
+                nome: "",
+                email: "raphilske",
+                senha: "",
+                confirmSenha: ""
+                );
 
             // Act
-            botaoRegistro.Click();
+            registroPO.SubmeteFormulario();
 
             // Assert
-            IWebElement elemento = driver.FindElement(By.CssSelector("span.msg-erro[data-valmsg-for=Email]"));
-            Assert.Equal("Please enter a valid email address.", elemento.Text);
+            
+            Assert.Equal("Please enter a valid email address.",registroPO.EmailMensagemErro);
         }
     }
 }
